@@ -20,5 +20,7 @@ namespace SnippetsApp.Models
 
         // List of groups user owns
         public IList<Group> OwnedGroups { get; set; }
+
+        public IList<Group> MyFilteredGroups { get; set; }
     }
 }

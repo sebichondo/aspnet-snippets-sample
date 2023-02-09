@@ -16,7 +16,7 @@ namespace SnippetsApp.Controllers
     public class GroupsController : BaseController
     {
         private readonly string[] _groupScopes =
-            new [] { GraphConstants.GroupReadWriteAll };
+            new[] { GraphConstants.GroupReadWriteAll };
 
         public GroupsController(
             GraphServiceClient graphClient,
@@ -181,6 +181,28 @@ namespace SnippetsApp.Controllers
 
                 model.OwnedGroups = await GetAllPagesAsType<Group>(
                     _graphClient, ownershipPage);
+
+                var queryOptions = new List<QueryOption>()
+                {
+                    new QueryOption("$count", "true")
+                };
+
+                //testing the filter query here 
+                // Get groups user is a member of
+                // GET /me/memberOf
+                var myfilteredUserGroups = await _graphClient.Me.MemberOf
+                    .Request(queryOptions)
+                    .Header("ConsistencyLevel", "eventual")
+                    .Filter("startswith(displayName, 'sa')")
+                    .Select("displayName,groupTypes,id")
+                    .Top(GraphConstants.PageSize)
+                    .GetAsync();
+
+                // This method casts the returned DirectoryObjects
+                // as Group object, and filters out any non-Group objects
+                model.MyFilteredGroups = await GetAllPagesAsType<Group>(
+                    _graphClient, myfilteredUserGroups);
+
 
                 return View(model);
             }
