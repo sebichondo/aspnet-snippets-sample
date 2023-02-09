@@ -6,6 +6,7 @@
 @model IEnumerable<Group>
 
 <div class="list-group">
+  Count : @Model.Count()
   @foreach (var group in Model)
   {
     <div class="list-group-item">

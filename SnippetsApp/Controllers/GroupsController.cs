@@ -193,7 +193,7 @@ namespace SnippetsApp.Controllers
                 var myfilteredUserGroups = await _graphClient.Me.MemberOf
                     .Request(queryOptions)
                     .Header("ConsistencyLevel", "eventual")
-                    .Filter("startswith(displayName, 'sa')")
+                    .Filter("startswith(displayName, 'c')")
                     .Select("displayName,groupTypes,id")
                     .Top(GraphConstants.PageSize)
                     .GetAsync();
